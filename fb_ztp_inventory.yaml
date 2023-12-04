@@ -1,0 +1,106 @@
+all:
+  hosts:
+    tests_box:
+      ansible_host: 127.0.0.1
+
+  vars:
+    ztp_token: "PURESETUP"                   # Token is removed at the end of the ZTP process.
+    fb_hostname: "my_flashblade"             # Set the hostname for the FlashBlade.
+    fb_ntp:
+      - uk.pool.ntp.org
+      - ie.pool.ntp.org
+      - fr.pool.ntp.org
+    fb_tz: "Europe/London"                   # Set FlashBlade timezone.
+    fb_lag_port_count: 1                     # For single 100G or 40G per data link set to 1. to use breakout cables set to 4.
+    fb_lag_lane_speed: "10"                  # 25 for 100G transceivers or 10 for 40G transceivers, sets the individual lane speed.
+    fb_lag:
+      - name: "uplink"
+        ports:
+          - CH1.FM1.ETH1                     # For use with Single Chassis deployments.
+          - CH1.FM1.ETH2
+#          - CH1.FM1.ETH3
+#          - CH1.FM1.ETH4
+          - CH1.FM2.ETH1
+          - CH1.FM2.ETH2
+#          - CH1.FM2.ETH3
+#          - CH1.FM2.ETH4
+#          - XFM1.ETH21                       # For use with Multi Chassis deployments.
+#          - XFM1.ETH22
+#          - XFM1.ETH23
+#          - XFM1.ETH24
+#          - XFM1.ETH25
+#          - XFM1.ETH26
+#          - XFM1.ETH27
+#          - XFM1.ETH28
+#          - XFM2.ETH21
+#          - XFM2.ETH22
+#          - XFM2.ETH23
+#          - XFM2.ETH24
+#          - XFM2.ETH25
+#          - XFM2.ETH26
+#          - XFM2.ETH27
+#          - XFM2.ETH28
+    fb_subnets:
+     - name: "mgmt0"
+       mtu: 1500
+       prefix: "10.23.36.0/24"
+       gateway: "10.23.36.1"
+       vlan: 0
+       out_of_band: true
+
+     - name: "data0"
+       mtu: 1500
+       prefix: "192.168.1.0/24"
+       gateway: "192.168.1.1"
+       link_aggregation_group:
+         name: "uplink"
+       vlan: 101
+       out_of_band: false
+
+#     - name: mgmt_ipv6
+#       mtu: 1500
+#       prefix: 2620:X:X:X::/64
+#       gateway: 2620:X:X:X::1
+#       vlan: 1090
+#       out_of_band: true
+
+#     - name: data_ipv6
+#       mtu: 1500
+#       prefix: 2620:X:X:X::/64
+#       gateway: 2620:X:X:X::1
+#       link_aggregation_group:
+#         name: uplink
+#       vlan: 1080
+#       out_of_band: false
+
+    fb_admin_network:
+      fm1.admin0: "10.23.36.51"
+      fm2.admin0: "10.23.36.52"
+      vir0: "10.23.36.50"
+#     fm1.admin0.1: 2620:X:X:X:X::2
+#     fm2.admin0.1: 2620:X:X:X:X::3
+#     vir1: 2620:X:X:X:X::1
+
+    # Data Networks
+    fb_data_network: "192.168.4.10"
+    fb_data_network_name: "data0-0"
+
+    fb_dns:
+      nameservers:
+       - "10.23.36.10"
+      domain: "purestorage.com"
+
+    # Set the Pure1 Senderdomain
+    fb_smtp:
+      relay_host:
+      sender_domain: "purestorage.com"
+
+    # Configure Proxy and phone home settings
+    fb_support:
+      phonehome_enabled: true
+      proxy:
+
+    # Add alert watcher email addresses
+    fb_alert_watchers:
+      - "pureuser01@purestorage.com"
+      - "pureuser02@purestorage.com"

@@ -1,0 +1,47 @@
+- hosts: localhost
+  gather_facts: false
+  vars_prompt:
+    - name: fb_temp_ip
+      prompt: Provide FlashBlade Temporary DHCP Address
+      private: false
+  tasks:
+
+  - name: Set FlashBlade name
+    purestorage.flashblade.purefb_bladename:
+      name: "{{ fb_hostname }}"
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
+
+  - name: Assign NTP Servers
+    purestorage.flashblade.purefb_ntp:
+      ntp_servers: "{{ fb_ntp }}"
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
+
+  - name: Assign TimeZone
+    purestorage.flashblade.purefb_tz:
+      timezone: "{{ fb_tz }}"
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
+
+   - name: Configure Data Uplinks
+     loop: "{{ fb_lag[0].ports }}"
+     purefb_hardware:
+       speed: "{{ fb_lag_lane_speed }}"
+       ports: "{{ fb_lag_port_count }}"
+       name: "{{ item }}"
+       fb_url: "{{ fb_temp_ip }}"
+       api_token: "{{ ztp_token }}"
+
+  - name: Link Aggregation Groups
+    purestorage.flashblade.purefb_lag:
+      ports: "{{ fb_lag[0].ports }}"
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
+
+  - name: Network Subnets
+    loop: "{{ fb_subnets }}"
+    purestorage.flashblade.purefb_subnet:
+      "{{ item }}"
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
