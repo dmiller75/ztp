@@ -24,14 +24,14 @@
       fb_url: "{{ fb_temp_ip }}"
       api_token: "{{ ztp_token }}"
 
-   - name: Configure Data Uplinks
-     loop: "{{ fb_lag[0].ports }}"
-     purefb_hardware:
-       speed: "{{ fb_lag_lane_speed }}"
-       ports: "{{ fb_lag_port_count }}"
-       name: "{{ item }}"
-       fb_url: "{{ fb_temp_ip }}"
-       api_token: "{{ ztp_token }}"
+  - name: Configure Data Uplinks
+    loop: "{{ fb_lag[0].ports }}"
+    purefb_hardware:
+      speed: "{{ fb_lag_lane_speed }}"
+      ports: "{{ fb_lag_port_count }}"
+      name: "{{ item }}"
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
 
   - name: Link Aggregation Groups
     purestorage.flashblade.purefb_lag:
@@ -42,6 +42,38 @@
   - name: Network Subnets
     loop: "{{ fb_subnets }}"
     purestorage.flashblade.purefb_subnet:
-      "{{ item }}"
       fb_url: "{{ fb_temp_ip }}"
       api_token: "{{ ztp_token }}"
+      name: "{{ item.name }}"
+      lag: "{{ item.lag }}"
+      mtu: "{{ item.mtu }}"
+      prefix: "{{ item.prefix }}"
+      gateway: "{{ item.gateway }}"
+      vlan: "{{ item.vlan }}"
+
+  - name: Set any Out of Band
+    loop: "{{ fb_subnets }}"
+    when: item.out_of_band == true
+    purestorage.flashblade.purefb_subnet:
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
+      name: "{{ item.name }}"
+      lag: "{{ item.lag }}"
+      state: absent
+
+  - name: Configure Admin Interfaces
+    loop: "{{ fb_admin_network }}"
+    purestorage.flashblade.purefb_network:
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
+      name: "{{ item.name }}"
+      address: "{{ item.address }}"
+
+  - name: Configure Data Interfaces
+    loop: "{{ fb_data_network }}"
+    purestorage.flashblade.purefb_network:
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
+      name: "{{ item.name }}"
+      address: "{{ item.address }}"
+      

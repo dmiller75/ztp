@@ -74,9 +74,12 @@ all:
 #       out_of_band: false
 
     fb_admin_network:
-      fm1.admin0: "10.23.36.51"
-      fm2.admin0: "10.23.36.52"
-      vir0: "10.23.36.50"
+      - name: fm1.admin0 
+        address: "10.23.36.51"
+      - name: fm2.admin0
+        address:  "10.23.36.52"
+      - name: vir0
+        address:  "10.23.36.50"
 #     fm1.admin0.1: 2620:X:X:X:X::2
 #     fm2.admin0.1: 2620:X:X:X:X::3
 #     vir1: 2620:X:X:X:X::1
