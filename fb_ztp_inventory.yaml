@@ -5,7 +5,7 @@ all:
 
   vars:
     ztp_token: "PURESETUP"                   # Token is removed at the end of the ZTP process.
-    fb_hostname: "my_flashblade"             # Set the hostname for the FlashBlade.
+    fb_hostname: "SV2-FB-B05-13"             # Set the hostname for the FlashBlade.
     fb_ntp:
       - uk.pool.ntp.org
       - ie.pool.ntp.org
@@ -20,10 +20,11 @@ all:
           - CH1.FM1.ETH2
 #          - CH1.FM1.ETH3
 #          - CH1.FM1.ETH4
-          - CH1.FM2.ETH1
+          - CH1.FM2.ETH1                     # For use with Single Chassis deployments.
           - CH1.FM2.ETH2
 #          - CH1.FM2.ETH3
 #          - CH1.FM2.ETH4
+
 #          - XFM1.ETH21                       # For use with Multi Chassis deployments.
 #          - XFM1.ETH22
 #          - XFM1.ETH23
@@ -43,18 +44,17 @@ all:
     fb_subnets:
      - name: "mgmt0"
        mtu: 1500
-       prefix: "10.23.36.0/24"
-       gateway: "10.23.36.1"
+       prefix: "10.1.36.0/24"
+       gateway: ""
        vlan: 0
        out_of_band: true
 
      - name: "data0"
        mtu: 1500
-       prefix: "192.168.1.0/24"
-       gateway: "192.168.1.1"
-       link_aggregation_group:
-         name: "uplink"
-       vlan: 101
+       prefix: "10.23.36.0/24"
+       gateway: "10.23.36.1"
+       lag: "uplink"
+       vlan: 0
        out_of_band: false
 
 #     - name: mgmt_ipv6
@@ -75,18 +75,19 @@ all:
 
     fb_admin_network:
       - name: fm1.admin0 
-        address: "10.23.36.51"
+        address: "10.1.36.51"
       - name: fm2.admin0
-        address:  "10.23.36.52"
+        address:  "10.1.36.52"
       - name: vir0
-        address:  "10.23.36.50"
+        address:  "10.1.36.50"
 #     fm1.admin0.1: 2620:X:X:X:X::2
 #     fm2.admin0.1: 2620:X:X:X:X::3
 #     vir1: 2620:X:X:X:X::1
 
     # Data Networks
-    fb_data_network: "192.168.4.10"
-    fb_data_network_name: "data0-0"
+    fb_data_network: 
+      - name: data0-0
+        address: "10.23.36.50"
 
     fb_dns:
       nameservers:
@@ -107,3 +108,4 @@ all:
     fb_alert_watchers:
       - "pureuser01@purestorage.com"
       - "pureuser02@purestorage.com"
+    api_version: "2.4"
