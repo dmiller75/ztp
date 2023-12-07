@@ -94,8 +94,6 @@ all:
       nameservers:
        - "10.23.36.10"
       domain: "purestorage.com"
-      search: 
-       - "purestorage.com"
 
     # Set the Pure1 Senderdomain
     fb_smtp:
