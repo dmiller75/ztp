@@ -53,7 +53,8 @@ all:
        mtu: 1500
        prefix: "10.23.36.0/24"
        gateway: "10.23.36.1"
-       lag: "uplink"
+       link_aggregation_group:
+         name: uplink
        vlan: 0
        out_of_band: false
 
@@ -93,6 +94,8 @@ all:
       nameservers:
        - "10.23.36.10"
       domain: "purestorage.com"
+      search: 
+       - "purestorage.com"
 
     # Set the Pure1 Senderdomain
     fb_smtp:
@@ -102,10 +105,14 @@ all:
     # Configure Proxy and phone home settings
     fb_support:
       phonehome_enabled: true
-      proxy:
+      proxy: ""
+      port: ""
+      secure: true
 
     # Add alert watcher email addresses
     fb_alert_watchers:
-      - "pureuser01@purestorage.com"
-      - "pureuser02@purestorage.com"
-    api_version: "2.4"
+      - address: "pureuser01@purestorage.com"					# Recipient Address
+        severity: info								# Severity level of messages to send: info (all), warning, critical. 
+      - address: "pureuser02@purestorage.com"
+        severity: critical
+    api_version: "2.10"

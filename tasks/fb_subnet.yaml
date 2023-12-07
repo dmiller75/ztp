@@ -14,13 +14,15 @@
             session_token: "{{ login_response['x_auth_token'] }}"
 
 
-        - name: Set Out of Band.
+        - name: Create Subnets. 
           uri:
-            url: "https://{{ fb_temp_ip }}/api/{{ api_version }}/subnets?names={{ item.name }}&out_of_band=true"
-            method: PATCH
+            url: "https://{{ fb_temp_ip }}/api/{{ api_version }}/subnets?names={{ item.name }}"
+            method: POST
             headers:
               Content-Type: application/json
               x-auth-token: "{{ session_token }}"
             validate_certs: no
             return_content: yes
             body_format: json
+            body: "{{ item }}"
+          ignore_errors: true

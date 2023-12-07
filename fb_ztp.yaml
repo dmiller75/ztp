@@ -39,35 +39,10 @@
       fb_url: "{{ fb_temp_ip }}"
       api_token: "{{ ztp_token }}"
 
-  - name: Admin Network Subnets
+  - name: Create Subnets
     loop: "{{ fb_subnets }}"
-    when: item.out_of_band == true
-    purestorage.flashblade.purefb_subnet:
-      fb_url: "{{ fb_temp_ip }}"
-      api_token: "{{ ztp_token }}"
-      name: "{{ item.name }}"
-      prefix: "{{ item.prefix }}"
-      gateway: "{{ item.gateway }}"
-      vlan: "{{ item.vlan }}"
-
-  - name: Remove LAG from Admin Subnet
-    loop: "{{ fb_subnets }}"
-    when: item.out_of_band == true
     ansible.builtin.include_tasks:
       file: tasks/fb_subnet.yaml
-
-  - name: Data Network Subnets
-    loop: "{{ fb_subnets }}"
-    when: item.out_of_band == false
-    purestorage.flashblade.purefb_subnet:
-      fb_url: "{{ fb_temp_ip }}"
-      api_token: "{{ ztp_token }}"
-      name: "{{ item.name }}"
-#      lag: "{{ item.lag }}"
-#      mtu: "{{ item.mtu }}"
-      prefix: "{{ item.prefix }}"
-      gateway: "{{ item.gateway }}"
-      vlan: "{{ item.vlan }}"
 
   - name: Configure Admin Interfaces
     loop: "{{ fb_admin_network }}"
@@ -77,11 +52,42 @@
       name: "{{ item.name }}"
       address: "{{ item.address }}"
 
-  - name: Configure Data Interfaces
-    loop: "{{ fb_data_network }}"
-    purestorage.flashblade.purefb_network:
+#  - name: Configure Data Interfaces
+#    loop: "{{ fb_data_network }}"
+#    purestorage.flashblade.purefb_network:
+#      fb_url: "{{ fb_temp_ip }}"
+#      api_token: "{{ ztp_token }}"
+#      name: "{{ item.name }}"
+#      address: "{{ item.address }}"
+
+  - name: Configure SMTP 
+    purestorage.flashblade.purefb_smtp:
+      host: "{{ fb_smtp.relay_host }}"
+      domain: "{{ fb_smtp.sender_domain }}"
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"     
+
+  - name: Configure Phonehome
+    when: fb_support.phonehome_enabled == true
+    purestorage.flashblade.purefb_phonehome:
       fb_url: "{{ fb_temp_ip }}"
       api_token: "{{ ztp_token }}"
-      name: "{{ item.name }}"
+      state: present
+
+  - name: Configure Phonehome Proxy
+    when: fb_support.phonehome_enabled == true and fb_support.proxy != ""
+    purestorage.flashblade.purefb_proxy:
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
+      host: "{{ fb_support.proxy }}"
+      port: "{{ fb_support.proxy_port }}"
+      secure: "{{ fb_support.proxy_secure }}"
+
+  - name: Configure addresses on the alert list.
+    loop: "{{ fb_alert_watchers }}"
+    purestorage.flashblade.purefb_alert:
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
       address: "{{ item.address }}"
-      
+      severity: "{{ item.severity }}"
+      enabled: true
