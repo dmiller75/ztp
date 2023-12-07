@@ -39,6 +39,14 @@
       fb_url: "{{ fb_temp_ip }}"
       api_token: "{{ ztp_token }}"
 
+  - name: Assign DNS Servers
+    purestorage.flashblade.purefb_dns:
+      fb_url: "{{ fb_temp_ip }}"
+      api_token: "{{ ztp_token }}"
+      domain: "{{ fb_dns.domain }}"
+      nameservers: "{{ fb_dns.nameservers }}"
+      search: "{{ fb_dns.search }}"
+
   - name: Create Subnets
     loop: "{{ fb_subnets }}"
     ansible.builtin.include_tasks:
