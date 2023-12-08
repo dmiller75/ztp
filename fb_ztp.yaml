@@ -53,11 +53,16 @@
 
   - name: Configure Admin Interfaces
     loop: "{{ fb_admin_network }}"
-    purefb_network:
-      fb_url: "{{ fb_temp_ip }}"
-      api_token: "{{ ztp_token }}"
-      name: "{{ item.name }}"
-      address: "{{ item.address }}"
+    ansible.builtin.include_tasks:
+      file: tasks/fb_network.yaml
+
+#  - name: Configure Admin Interfaces
+#    loop: "{{ fb_admin_network }}"
+#    purestorage.flashblade.purefb_network:
+#      fb_url: "{{ fb_temp_ip }}"
+#      api_token: "{{ ztp_token }}"
+#      name: "{{ item.name }}"
+#      address: "{{ item.address }}"
 
 #  - name: Configure Data Interfaces
 #    loop: "{{ fb_data_network }}"
@@ -98,3 +103,12 @@
       address: "{{ item.address }}"
       severity: "{{ item.severity }}"
       enabled: true
+
+  - name: Generate API token
+    when: fb_pureuser_api_token == true
+    ansible.builtin.include_tasks:
+      file: tasks/fb_pureuser.yaml
+
+#  - name: Create admin account.
+#    ansible.builtin.include_tasks:
+#      file: tasks/fb_finalize.yaml
