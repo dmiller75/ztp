@@ -16,25 +16,25 @@ all:
     fb_lag:
       - name: "uplink"
         ports:
-          - CH1.FM1.ETH1					# For use with Single Chassis deployments.
-          - CH1.FM1.ETH2
+#          - CH1.FM1.ETH1					# For use with Single Chassis deployments.
+#          - CH1.FM1.ETH2
 #          - CH1.FM1.ETH3
 #          - CH1.FM1.ETH4
-          - CH1.FM2.ETH1					# For use with Single Chassis deployments.
-          - CH1.FM2.ETH2
+#          - CH1.FM2.ETH1					# For use with Single Chassis deployments.
+#          - CH1.FM2.ETH2
 #          - CH1.FM2.ETH3
 #          - CH1.FM2.ETH4
 
-#          - XFM1.ETH21						# For use with Multi Chassis deployments.
-#          - XFM1.ETH22
+          - XFM1.ETH21						# For use with Multi Chassis deployments.
+          - XFM1.ETH22
 #          - XFM1.ETH23
 #          - XFM1.ETH24
 #          - XFM1.ETH25
 #          - XFM1.ETH26
 #          - XFM1.ETH27
 #          - XFM1.ETH28
-#          - XFM2.ETH21
-#          - XFM2.ETH22
+          - XFM2.ETH21
+          - XFM2.ETH22
 #          - XFM2.ETH23
 #          - XFM2.ETH24
 #          - XFM2.ETH25
@@ -42,17 +42,17 @@ all:
 #          - XFM2.ETH27
 #          - XFM2.ETH28
     fb_subnets:							# Configure ADMIN subnet
-     - name: "mgmt0"
-       mtu: 1500
-       prefix: "10.1.36.0/24"
-       gateway: ""
-       vlan: 0
-       out_of_band: true
-
-     - name: "data0"						# Configure DATA subnet(s)
+     - name: "mgmt"						# DO NOT use mgmt0, name conflicts with bonded interface.
        mtu: 1500
        prefix: "10.23.36.0/24"
        gateway: "10.23.36.1"
+       vlan: 0
+       out_of_band: true
+
+     - name: "data"						# Configure DATA subnet(s)
+       mtu: 1500
+       prefix: "10.1.36.0/24"
+       gateway: ""
        link_aggregation_group:
          name: uplink
        vlan: 0							# Untagged Data Vlan supported 4.1.5+
@@ -74,21 +74,24 @@ all:
 #       vlan: 1080
 #       out_of_band: false
 
-    fb_admin_network:						# Configure ADMIN Interface IPs
+    fb_admin_network:						# Configure ADMIN Interface IPv4
       - name: fm1.admin0 
-        address: "10.1.36.51"
+        address: "10.23.36.51"
       - name: fm2.admin0
-        address:  "10.1.36.52"
+        address:  "10.23.36.52"
       - name: vir0
-        address:  "10.1.36.50"
-#     fm1.admin0.1: 2620:X:X:X:X::2
-#     fm2.admin0.1: 2620:X:X:X:X::3
-#     vir1: 2620:X:X:X:X::1
+        address:  "10.23.36.50"
+#     - name: fm1.admin0.1					# Configure ADMIN Interface IPv6
+#       address: 2620:X:X:X:X::2
+#     - name: fm2.admin0.1
+#       address: 2620:X:X:X:X::3
+#     - name: vir1 
+#       address: 2620:X:X:X:X::1
 
     # Data Networks
     fb_data_network: 						# Data Interfaces cannot be configured in Setup mode, defer to post install, requires Pureuser API token 
       - name: data0-0
-        address: "10.23.36.50"
+        address: "10.1.36.50"
 
     fb_dns:							# Configure DNS Servers.
       nameservers:
@@ -118,4 +121,4 @@ all:
     fb_pureuser_api_token: true					# Generate API token for pureuser, visible in WebUI
 
 
-    api_version: "2.10"						# Version of API to use. Purity//FB 4.1.12 (2.10)
+    api_version: "2.10"						# Version of API to use. Purity//FB 4.1.X (2.10)

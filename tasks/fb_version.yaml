@@ -1,0 +1,27 @@
+        - name: Obtain API x-auth-token from FlashBlade
+          uri:
+            url: "https://{{ fb_temp_ip }}/api/login"
+            method: POST
+            body_format: json
+            headers: 
+              api-token: "{{ ztp_token }}"
+            validate_certs: no
+            return_content: yes
+          register: login_response
+
+        - name: Set API token as fact
+          set_fact:
+            session_token: "{{ login_response['x_auth_token'] }}"
+
+
+        - name: Get API Version
+          uri:
+            url: "https://{{ fb_temp_ip }}/api/api_version"
+            method: GET
+            headers:
+              Content-Type: application/json
+              x-auth-token: "{{ session_token }}"
+            validate_certs: no
+            return_content: yes
+            body_format: json
+            body:

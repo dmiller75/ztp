@@ -1,0 +1,11 @@
+- hosts: localhost
+  gather_facts: false
+  vars_prompt:
+    - name: fb_temp_ip
+      prompt: Provide FlashBlade Temporary DHCP Address
+      private: false
+  tasks:
+
+  - name: Create LAG.
+    ansible.builtin.include_tasks:
+      file: tasks/fb_lag.yaml

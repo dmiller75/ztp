@@ -33,11 +33,9 @@
       fb_url: "{{ fb_temp_ip }}"
       api_token: "{{ ztp_token }}"
 
-  - name: Link Aggregation Groups
-    purestorage.flashblade.purefb_lag:
-      ports: "{{ fb_lag[0].ports | regex_replace('.FM*.','') }}"
-      fb_url: "{{ fb_temp_ip }}"
-      api_token: "{{ ztp_token }}"
+#  - name: Link Aggregation Group 
+#    ansible.builtin.include_tasks:
+#      file: tasks/fb_lag.yaml
 
   - name: Assign DNS Servers
     purestorage.flashblade.purefb_dns:
@@ -104,11 +102,11 @@
       severity: "{{ item.severity }}"
       enabled: true
 
-  - name: Generate API token
-    when: fb_pureuser_api_token == true
-    ansible.builtin.include_tasks:
-      file: tasks/fb_pureuser.yaml
-
-#  - name: Create admin account.
+#  - name: Generate API token
+#    when: fb_pureuser_api_token == true
 #    ansible.builtin.include_tasks:
-#      file: tasks/fb_finalize.yaml
+#      file: tasks/fb_pureuser.yaml
+
+  - name: Create admin account.
+    ansible.builtin.include_tasks:
+      file: tasks/fb_finalize.yaml
