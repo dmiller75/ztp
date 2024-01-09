@@ -6,7 +6,12 @@ Within this repository is a set of ansible playbooks for use with Pure Storage F
 
 ZTP requires DHCP and the FlashBlade to be in setup mode and bootstrapped.
 
-  `fbsetup --ztp`
+    `fbsetup --ztp`
 
 ### Ansible Pre-Requisites
 These playbooks in part, take advantage of the [Pure Storage Ansible FlashBlade Collection](https://github.com/Pure-Storage-Ansible/FlashBlade-Collection).
+
+## Usage
+Modify the inventory file with the required system information and execute. 
+
+    ansible-playbook -i fb_ztp_inventory.yaml fb_ztp.yaml     
