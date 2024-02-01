@@ -13,8 +13,7 @@
           set_fact:
             session_token: "{{ login_response['x_auth_token'] }}"
 
-
-        - name: Create Subnets. 
+        - name: Update Admin Interface. 
           uri:
             url: "https://{{ fb_temp_ip }}/api/{{ api_version }}/network-interfaces?names={{ item.name }}"
             method: PATCH
@@ -26,4 +25,16 @@
             body_format: json
             body: 
               address: "{{ item.address }}"
+          ignore_errors: true
+
+        - name: Get Interface 
+          uri:
+            url: "https://{{ fb_temp_ip }}/api/{{ api_version }}/network-interfaces?names={{ item.name }}"
+            method: GET
+            headers:
+              Content-Type: application/json
+              x-auth-token: "{{ session_token }}"
+            validate_certs: no
+            return_content: yes
+            body_format: json
           ignore_errors: true

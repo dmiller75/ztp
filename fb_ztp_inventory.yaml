@@ -49,14 +49,14 @@ all:
        vlan: 0
        out_of_band: true
 
-     - name: "data"						# Configure DATA subnet(s)
-       mtu: 1500
-       prefix: "10.1.36.0/24"
-       gateway: ""
-       link_aggregation_group:
-         name: uplink
-       vlan: 0							# Untagged Data Vlan supported 4.1.5+
-       out_of_band: false
+#     - name: "data"						# Configure DATA subnet(s)
+#       mtu: 1500
+#       prefix: "10.1.36.0/24"
+#       gateway: ""
+#       link_aggregation_group:
+#         name: uplink
+#       vlan: 0							# Untagged Data Vlan supported 4.1.5+
+#       out_of_band: false
 
 #     - name: mgmt_ipv6
 #       mtu: 1500

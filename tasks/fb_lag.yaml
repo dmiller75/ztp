@@ -15,8 +15,12 @@
 
         - name: Set Port Payload
           set_fact:
-             payload: "{{ payload|default([]) + ['{ name: ' ~ item ~ ' }'] }}"
+             payload1: "{{ payload1|default([]) + ['name: ' ~ item|string] }}"
           loop: "{{ fb_lag[0].ports }}"
+
+        - name: Format Payload
+          set_fact:
+            payload: "{{ payload1|join(',') }}"
 
         - name: Create LAG. 
           uri:
@@ -29,7 +33,7 @@
             return_content: yes
             body_format: json
             body: 
-              - ports: 
-                  "{{ payload }}"
+              ports: 
+                "{{ payload|split(',')|map('from_yaml')|list }}"
 
         #  ignore_errors: true

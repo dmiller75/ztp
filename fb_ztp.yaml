@@ -11,6 +11,7 @@
       name: "{{ fb_hostname }}"
       fb_url: "{{ fb_temp_ip }}"
       api_token: "{{ ztp_token }}"
+    ignore_errors: true
 
   - name: Assign NTP Servers
     purestorage.flashblade.purefb_ntp:
@@ -33,9 +34,16 @@
       fb_url: "{{ fb_temp_ip }}"
       api_token: "{{ ztp_token }}"
 
-#  - name: Link Aggregation Group 
-#    ansible.builtin.include_tasks:
-#      file: tasks/fb_lag.yaml
+  - name: Link Aggregation Group 
+    ansible.builtin.include_tasks:
+      file: tasks/fb_lag.yaml
+ # - name: Link Aggregation Group
+ #   purestorage.flashblade.purefb_lag:
+ #     fb_url: "{{ fb_temp_ip }}"
+ #     api_token: "{{ ztp_token }}"
+ #     name: uplink
+ #     ports:
+ #       "{{ fb_lag[0].ports }}"
 
   - name: Assign DNS Servers
     purestorage.flashblade.purefb_dns:
@@ -56,14 +64,6 @@
 
 #  - name: Configure Admin Interfaces
 #    loop: "{{ fb_admin_network }}"
-#    purestorage.flashblade.purefb_network:
-#      fb_url: "{{ fb_temp_ip }}"
-#      api_token: "{{ ztp_token }}"
-#      name: "{{ item.name }}"
-#      address: "{{ item.address }}"
-
-#  - name: Configure Data Interfaces
-#    loop: "{{ fb_data_network }}"
 #    purestorage.flashblade.purefb_network:
 #      fb_url: "{{ fb_temp_ip }}"
 #      api_token: "{{ ztp_token }}"
@@ -107,6 +107,6 @@
 #    ansible.builtin.include_tasks:
 #      file: tasks/fb_pureuser.yaml
 
-  - name: Create admin account.
-    ansible.builtin.include_tasks:
-      file: tasks/fb_finalize.yaml
+#  - name: Create admin account.
+#    ansible.builtin.include_tasks:
+#      file: tasks/fb_finalize.yaml
