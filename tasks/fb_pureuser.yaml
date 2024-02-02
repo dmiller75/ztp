@@ -13,20 +13,6 @@
           set_fact:
             session_token: "{{ login_response['x_auth_token'] }}"
 
-
-       # - name: Create API Token for Pureuser v1. 
-       #   uri:
-       #     url: "https://{{ fb_temp_ip }}/api/1.12/admins?names=pureuser"
-       #     method: PATCH
-       #     headers:
-       #       Content-Type: application/json
-       #       x-auth-token: "{{ session_token }}"
-       #     validate_certs: no
-       #     return_content: yes
-       #     body_format: json
-       #     body:
-       #       create_api_token: true
-
         - name: Create API Token for Admin User 
           uri:
             url: "https://{{ fb_temp_ip }}/api/{{ api_version }}/admins/api-tokens?admin_names=pureuser"

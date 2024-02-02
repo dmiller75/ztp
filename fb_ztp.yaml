@@ -92,6 +92,6 @@
     ansible.builtin.include_tasks:
       file: tasks/fb_pureuser.yaml
 
-#  - name: Finalise the install and reboot.
-#    ansible.builtin.include_tasks:
-#      file: tasks/fb_finalize.yaml
+  - name: Finalise the install and reboot.
+    ansible.builtin.include_tasks:
+      file: tasks/fb_finalize.yaml
