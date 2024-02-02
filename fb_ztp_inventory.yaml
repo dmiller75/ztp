@@ -45,18 +45,9 @@ all:
      - name: "mgmt"						# DO NOT use mgmt0, name conflicts with bonded interface.
        mtu: 1500
        prefix: "10.23.36.0/24"
-       gateway: "10.23.36.1"
+       gateway: "10.23.36.1"                                    # Validate and Finalize ZTP APIs require Gateway address, remove post ZTP if not required - IR-155066
        vlan: 0
        out_of_band: true
-
-#     - name: "data"						# Configure DATA subnet(s)
-#       mtu: 1500
-#       prefix: "10.1.36.0/24"
-#       gateway: ""
-#       link_aggregation_group:
-#         name: uplink
-#       vlan: 0							# Untagged Data Vlan supported 4.1.5+
-#       out_of_band: false
 
 #     - name: mgmt_ipv6
 #       mtu: 1500
@@ -64,6 +55,16 @@ all:
 #       gateway: 2620:X:X:X::1
 #       vlan: 1090
 #       out_of_band: true
+
+    fb_data_subnets:
+     - name: "data"						# DATA subnet(s) will not be created during ZTP process, Setup mode does not permit Data IP creation.  
+       mtu: 1500
+       prefix: "10.1.36.0/24"
+       gateway: "10.23.1.1"                                      
+       link_aggregation_group:
+         name: uplink
+       vlan: 0							# Untagged Data Vlan supported 4.1.5+, there can be only 1 untagged data subnet. 
+       out_of_band: false
 
 #     - name: data_ipv6
 #       mtu: 1500

@@ -37,13 +37,6 @@
   - name: Link Aggregation Group 
     ansible.builtin.include_tasks:
       file: tasks/fb_lag.yaml
- # - name: Link Aggregation Group
- #   purestorage.flashblade.purefb_lag:
- #     fb_url: "{{ fb_temp_ip }}"
- #     api_token: "{{ ztp_token }}"
- #     name: uplink
- #     ports:
- #       "{{ fb_lag[0].ports }}"
 
   - name: Assign DNS Servers
     purestorage.flashblade.purefb_dns:
@@ -61,14 +54,6 @@
     loop: "{{ fb_admin_network }}"
     ansible.builtin.include_tasks:
       file: tasks/fb_network.yaml
-
-#  - name: Configure Admin Interfaces
-#    loop: "{{ fb_admin_network }}"
-#    purestorage.flashblade.purefb_network:
-#      fb_url: "{{ fb_temp_ip }}"
-#      api_token: "{{ ztp_token }}"
-#      name: "{{ item.name }}"
-#      address: "{{ item.address }}"
 
   - name: Configure SMTP 
     purestorage.flashblade.purefb_smtp:
@@ -93,7 +78,7 @@
       port: "{{ fb_support.proxy_port }}"
       secure: "{{ fb_support.proxy_secure }}"
 
-  - name: Configure addresses on the alert list.
+  - name: Add email recipients on the alert list.
     loop: "{{ fb_alert_watchers }}"
     purestorage.flashblade.purefb_alert:
       fb_url: "{{ fb_temp_ip }}"
@@ -102,11 +87,11 @@
       severity: "{{ item.severity }}"
       enabled: true
 
-#  - name: Generate API token
-#    when: fb_pureuser_api_token == true
-#    ansible.builtin.include_tasks:
-#      file: tasks/fb_pureuser.yaml
+  - name: Generate Admin account API token 
+    when: fb_pureuser_api_token == true
+    ansible.builtin.include_tasks:
+      file: tasks/fb_pureuser.yaml
 
-#  - name: Create admin account.
+#  - name: Finalise the install and reboot.
 #    ansible.builtin.include_tasks:
 #      file: tasks/fb_finalize.yaml
